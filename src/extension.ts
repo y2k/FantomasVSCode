@@ -25,8 +25,8 @@ export function activate(context: vs.ExtensionContext) {
                                 editor.edit((edit) => {
                                     edit.replace(new Range(
                                         new Position(0, 0),
-                                        new Position(editor.document.lineCount, 0))
-                                        , formated)
+                                        new Position(editor.document.lineCount, 0)),
+                                        formated)
                                     resolver(undefined)
                                 })
                             })
