@@ -1,9 +1,9 @@
-import * as vs from 'vscode';
-import { Range, Position } from 'vscode';
-import * as tmp from 'tmp';
-import * as fs from 'fs';
+import * as vs from 'vscode'
+import { Range, Position } from 'vscode'
+import * as tmp from 'tmp'
+import * as fs from 'fs'
 
-const spawn = require('cross-spawn');
+const spawn = require('cross-spawn')
 
 export function activate(context: vs.ExtensionContext) {
     let disposable = vs.commands.registerCommand('extension.fntms.format', () => {
@@ -30,11 +30,11 @@ export function activate(context: vs.ExtensionContext) {
                                     resolver(undefined)
                                 })
                             })
-                        });
+                        })
                     })
                 })
             })
         })
-    });
-    context.subscriptions.push(disposable);
+    })
+    context.subscriptions.push(disposable)
 }
