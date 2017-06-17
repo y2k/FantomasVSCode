@@ -24,7 +24,7 @@ export function activate(context: vs.ExtensionContext) {
                     await waitForEnd(cmd)
 
                     const formated = await fs.readFile(path, "UTF-8")
-                    editor.edit((edit) => {
+                    editor.edit(edit => {
                         edit.replace(new Range(
                             new Position(0, 0),
                             new Position(editor.document.lineCount, 0)),
