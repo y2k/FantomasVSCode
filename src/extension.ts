@@ -13,7 +13,7 @@ export function activate(context: vs.ExtensionContext) {
         vs.window.withProgress({
             title: "Format file...",
             location: vs.ProgressLocation.Window
-        }, (x) => {
+        }, () => {
             return new Promise(resolver => {
                 tmp.file({ postfix: ".fs" }, (_, path) => {
                     fs.writeFile(path, text, () => {
