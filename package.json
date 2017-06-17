@@ -36,8 +36,10 @@
     "@types/mocha": "^2.2.32"
   },
   "dependencies": {
+    "@types/fs-promise": "^1.0.3",
     "@types/tmp": "0.0.33",
-    "tmp": "0.0.31",
-    "cross-spawn": "^5.1.0"
+    "cross-spawn": "^5.1.0",
+    "fs-promise": "^2.0.3",
+    "tmp": "0.0.31"
   }
 }

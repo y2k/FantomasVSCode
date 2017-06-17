@@ -1,7 +1,8 @@
 import * as vs from 'vscode'
 import { Range, Position } from 'vscode'
 import * as tmp from 'tmp'
-import * as fs from 'fs'
+// import * as fs from 'fs'
+import * as fs from "fs-promise"
 
 const spawn = require('cross-spawn')
 
@@ -15,21 +16,21 @@ export function activate(context: vs.ExtensionContext) {
             location: vs.ProgressLocation.Window
         }, () => {
             return new Promise(resolver => {
-                tmp.file({ postfix: ".fs" }, (_, path) => {
-                    fs.writeFile(path, text, () => {
-                        const cmd = spawn("mono", [__dirname + "/../../fantomas/Fantomas.exe", path])
-                        cmd.stdout.on('data', (data: any) => console.log(`stdout: ${data}`))
-                        cmd.stderr.on('data', (data: any) => console.log(`stderr: ${data}`))
-                        cmd.on('close', (code: number) => {
-                            fs.readFile(path, "UTF-8", (_, formated) => {
-                                editor.edit((edit) => {
-                                    edit.replace(new Range(
-                                        new Position(0, 0),
-                                        new Position(editor.document.lineCount, 0)),
-                                        formated)
-                                    resolver(undefined)
-                                })
-                            })
+                tmp.file({ postfix: ".fs" }, async (_, path) => {
+                    await fs.writeFile(path, text)
+
+                    const cmd = spawn("mono", [__dirname + "/../../fantomas/Fantomas.exe", path])
+                    cmd.stdout.on('data', (data: any) => console.log(`stdout: ${data}`))
+                    cmd.stderr.on('data', (data: any) => console.log(`stderr: ${data}`))
+
+                    cmd.on('close', async (code: number) => {
+                        const formated = await fs.readFile(path, "UTF-8")
+                        editor.edit((edit) => {
+                            edit.replace(new Range(
+                                new Position(0, 0),
+                                new Position(editor.document.lineCount, 0)),
+                                formated)
+                            resolver(undefined)
                         })
                     })
                 })
