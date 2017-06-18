@@ -36,10 +36,10 @@
     "@types/mocha": "^2.2.32"
   },
   "dependencies": {
-    "@types/fs-promise": "^1.0.3",
+    "@types/fs-extra": "^3.0.3",
     "@types/tmp": "0.0.33",
     "cross-spawn": "^5.1.0",
-    "fs-promise": "^2.0.3",
+    "fs-extra": "^3.0.1",
     "tmp": "0.0.31"
   }
 }

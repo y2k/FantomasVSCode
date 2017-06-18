@@ -1,7 +1,7 @@
 import * as vs from 'vscode'
 import { Range, Position } from 'vscode'
 import * as tmp from 'tmp'
-import * as fs from "fs-promise"
+import * as fs from "fs-extra"
 
 const spawn = require('cross-spawn')
 
