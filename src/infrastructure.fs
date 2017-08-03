@@ -27,8 +27,8 @@ let replaceText text =
             let range = Range(0.0, 0.0, te.document.lineCount, 0.0)
             te.edit (fun e -> e.replace((U3.Case2 range), text)) |> unbox<Promise<_>>
         | _ -> P.lift ()
-let withProgress title promise =
+let withProgress title (promise: Promise<'a>) =
     let progressOpts = createEmpty<ProgressOptions>
     progressOpts.title <- Some title
     progressOpts.location <- ProgressLocation.Window
-    window.withProgress(progressOpts, fun _ -> promise) |> ignore
+    window.withProgress(progressOpts, fun _ -> promise |> unbox<PromiseLike<_>>) |> ignore

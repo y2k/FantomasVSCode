@@ -18,13 +18,13 @@ let private executeAsync text =
             do! I.replaceText formated
         with
         | e -> e.Message |> window.showErrorMessage |> ignore
-    } |> unbox<PromiseLike<_>>
+    }
+
+let private formatCommand () = 
+    window.activeTextEditor 
+    |> Option.map (fun x -> x.document.getText())
+    |> Option.map (executeAsync >> I.withProgress "Format file...")
 
 let activate(context : ExtensionContext) =
-    let handleCommand () = 
-        window.activeTextEditor 
-        |> Option.map (fun x -> x.document.getText())
-        |> Option.map (executeAsync >> I.withProgress "Format file...")
-
-    commands.registerCommand("extension.fntms.format", handleCommand |> unbox<Func<_,_>>)
+    commands.registerCommand("extension.fntms.format", formatCommand |> unbox<Func<_,_>>)
     |> context.subscriptions.Add
