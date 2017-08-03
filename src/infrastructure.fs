@@ -8,7 +8,6 @@ open Fable.Import.Node.Fs
 open Fable.Import.Node.ChildProcess
 
 module P = Fable.PowerPack.Promise
-module G = Fable.Import.Node.Globals
 
 type Options = { postfix: string }
 
