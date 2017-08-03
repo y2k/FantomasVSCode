@@ -12,7 +12,7 @@ module G = Fable.Import.Node.Globals
 
 type Options = { postfix: string }
 
-let createTemp (options: Options): Promise<string> = 
+let createTemp options = 
     let f: (Options -> (obj -> string -> unit) -> unit) = import "file" "tmp"
     P.create (fun resolve _ -> f options (fun _ path -> resolve path))
 let write path text =
