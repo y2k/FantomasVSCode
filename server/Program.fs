@@ -1,13 +1,14 @@
 ﻿module Program
 
+open System.Net
 open Suave
 open Suave.Filters
 open Suave.Operators
 open Suave.Successful
 
 module Domain = 
-    open System.Text
     open System.IO
+    open System.Text
     open Fantomas
     open Microsoft.FSharp.Compiler.SourceCodeServices
 
@@ -34,6 +35,8 @@ module Domain =
 
 [<EntryPoint>]
 let main _ = 
+    let cfg = { defaultConfig with 
+                    bindings = [ HttpBinding.create HTTP (System.Net.IPAddress.Parse "0.0.0.0") 8080us  ] }
     let app = choose [ POST >=> path "/format" >=> Domain.handle'' ]
     startWebServer defaultConfig app
     0
