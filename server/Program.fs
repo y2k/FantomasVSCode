@@ -1,17 +1,15 @@
 ﻿module Program
 
-open System.Text
-open System.Net
-
 open Suave
 open Suave.Filters
 open Suave.Operators
 open Suave.Successful
 
 module Domain = 
+    open System.Text
+    open System.IO
     open Fantomas
     open Microsoft.FSharp.Compiler.SourceCodeServices
-    open System.IO
 
     let private handle text = 
         let path = Path.GetTempFileName() |> sprintf "%O.fs"
@@ -36,8 +34,6 @@ module Domain =
 
 [<EntryPoint>]
 let main _ = 
-    let cfg = { defaultConfig with
-                    bindings = [ HttpBinding.create HTTP IPAddress.Loopback 8080us ] }
     let app = choose [ POST >=> path "/format" >=> Domain.handle'' ]
-    startWebServer cfg app
+    startWebServer defaultConfig app
     0
