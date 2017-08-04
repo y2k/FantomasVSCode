@@ -1,10 +1,12 @@
 ﻿module Program
 
+open System.Text
+open System.Net
+
 open Suave
 open Suave.Filters
 open Suave.Operators
 open Suave.Successful
-open System.Text
 
 module Domain = 
     open Fantomas
@@ -34,6 +36,8 @@ module Domain =
 
 [<EntryPoint>]
 let main _ = 
+    let cfg = { defaultConfig with
+                    bindings = [ HttpBinding.create HTTP IPAddress.Loopback 8080us ] }
     let app = choose [ POST >=> path "/format" >=> Domain.handle'' ]
-    startWebServer defaultConfig app
+    startWebServer cfg app
     0
