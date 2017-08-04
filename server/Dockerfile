@@ -6,4 +6,4 @@ COPY $source .
 
 RUN nuget restore && msbuild /p:Configuration=Release
 
-CMD [ "mono", "bin/Release/FantomasServer.exe" ]
+ENTRYPOINT [ "mono", "bin/Release/FantomasServer.exe" ]
