@@ -1,0 +1,9 @@
+FROM mono:latest
+
+ARG source=.
+WORKDIR /app
+COPY $source .
+
+RUN nuget restore && msbuild /p:Configuration=Release
+
+CMD [ "mono", "bin/Release/Server.exe" ]
