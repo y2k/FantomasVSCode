@@ -1,5 +1,7 @@
 FROM mono:latest
 
+EXPOSE 8080
+
 ARG source=.
 WORKDIR /app
 COPY $source .

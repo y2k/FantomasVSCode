@@ -29,7 +29,7 @@ module Domain =
     let handle'' (context: HttpContext) = async {
         let code = context.request.rawForm |> Encoding.UTF8.GetString
         let! formated = agent.PostAndAsyncReply(fun replyChannel -> code, replyChannel)
-        return! OK formated context >>= Writers.setMimeType "application/json"
+        return! OK formated context >>= Writers.setMimeType "plain/text"
     }
 
 [<EntryPoint>]
