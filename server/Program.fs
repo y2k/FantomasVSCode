@@ -38,5 +38,5 @@ let main _ =
     let cfg = { defaultConfig with 
                     bindings = [ HttpBinding.create HTTP (System.Net.IPAddress.Parse "0.0.0.0") 8080us  ] }
     let app = choose [ POST >=> path "/format" >=> Domain.handle'' ]
-    startWebServer defaultConfig app
+    startWebServer cfg app
     0
