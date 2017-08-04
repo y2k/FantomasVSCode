@@ -33,7 +33,7 @@ module Domain =
     }
 
 [<EntryPoint>]
-let main argv = 
+let main _ = 
     let app = choose [ POST >=> path "/format" >=> Domain.handle'' ]
     startWebServer defaultConfig app
     0
