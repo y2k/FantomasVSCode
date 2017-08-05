@@ -37,6 +37,7 @@ let postText (url: string) (text: string): Promise<string> =
 let createTemp options = 
     let f: (Options -> (obj -> string -> unit) -> unit) = import "file" "tmp"
     P.create (fun resolve _ -> f options (fun _ path -> resolve path))
+
 let write path text =
     P.create (fun resolve _ -> Fs.writeFile(path, text, fun _ -> resolve()))
 
