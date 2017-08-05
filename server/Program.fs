@@ -22,6 +22,9 @@ module Domain =
     let private agent = MailboxProcessor<string * AsyncReplyChannel<string>>.Start (fun inbox ->
         let rec messageLoop() = async {
             let! (text, reply) = inbox.Receive()
+            
+            printf "Format: |%O| -> |%O|" text (handle text)
+            
             handle text |> reply.Reply
             return! messageLoop()
         }
@@ -36,7 +39,8 @@ module Domain =
 [<EntryPoint>]
 let main _ = 
     let cfg = { defaultConfig with 
-                    bindings = [ HttpBinding.create HTTP (System.Net.IPAddress.Parse "0.0.0.0") 8080us  ] }
+                    logger = Suave.Logging.LiterateConsoleTarget([|"default"|], Suave.Logging.LogLevel.Debug)
+                    bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") 8080us  ] }
     let app = choose [ POST >=> path "/format" >=> Domain.handle'' ]
     startWebServer cfg app
     0

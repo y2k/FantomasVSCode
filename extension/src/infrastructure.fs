@@ -11,13 +11,21 @@ module H = Fable.Import.Node.Http
 
 type Options = { postfix: string }
 
+type PostHeaders = { ``Content-Type``: string; ``Content-Length``: float }
+
 let uploadText (url: string) (text: string): Promise<string> =
     P.create (fun resolve eHandler -> 
                    let options = createEmpty<H.RequestOptions>
                    options.method <- Some H.Methods.Post
-                   options.host <- Some "212.47.229.214"
-                   options.port <- Some 8080
-                   options.path <- Some "format"
+                   let urlParts = Url.parse url
+                   options.host <- urlParts.hostname
+                   options.port <- urlParts.port |> Option.map int
+                   options.path <- urlParts.path
+                   let buffer = Buffer.Buffer.from(text, "utf8")
+                   options.headers <- createObj [
+                        "Content-Type" ==> "plain/text"
+                        "Content-Length" ==> (buffer?length |> unbox<float>)
+                   ] |> Some
 
                    let r = Http.request(options, fun res -> 
                                                      let mutable result = ""
@@ -26,8 +34,8 @@ let uploadText (url: string) (text: string): Promise<string> =
                                                      res.on("end", fun _ -> resolve result) |> ignore
                                                      res.on("error", eHandler) |> ignore)
 
-                   r.write(Buffer.Buffer.Create(text)) |> ignore)
-
+                   text |> sprintf "WRITE: |%O|" |> System.Console.WriteLine
+                   r.write buffer |> ignore)
 let createTemp options = 
     let f: (Options -> (obj -> string -> unit) -> unit) = import "file" "tmp"
     P.create (fun resolve _ -> f options (fun _ path -> resolve path))
