@@ -11,8 +11,6 @@ module H = Fable.Import.Node.Http
 
 type Options = { postfix: string }
 
-type PostHeaders = { ``Content-Type``: string; ``Content-Length``: float }
-
 let postText (url: string) (text: string): Promise<string> =
     P.create (fun resolve eHandler -> 
                    let options = createEmpty<H.RequestOptions>
@@ -34,24 +32,28 @@ let postText (url: string) (text: string): Promise<string> =
                                                      res.on("end", fun _ -> resolve result) |> ignore
                                                      res.on("error", eHandler) |> ignore)
 
-                   text |> sprintf "WRITE: |%O|" |> System.Console.WriteLine
                    r.write buffer |> ignore)
+
 let createTemp options = 
     let f: (Options -> (obj -> string -> unit) -> unit) = import "file" "tmp"
     P.create (fun resolve _ -> f options (fun _ path -> resolve path))
 let write path text =
     P.create (fun resolve _ -> Fs.writeFile(path, text, fun _ -> resolve()))
+
 let read path =
     P.create(fun resolve _ -> Fs.readFile(path, "utf8", (fun _ data -> resolve data)))
+
 let shell command (args: string list) =
     P.create(fun resolve _ -> let p = ChildProcess.spawn(command, ResizeArray args)
                               p.on("close", resolve) |> ignore)
+
 let replaceText text =
     match window.activeTextEditor with
         | Some te -> 
             let range = Range(0.0, 0.0, te.document.lineCount, 0.0)
             te.edit (fun e -> e.replace((U3.Case2 range), text)) |> unbox<Promise<_>>
         | _ -> P.lift ()
+
 let withProgress title (promise: Promise<'a>) =
     let progressOpts = createEmpty<ProgressOptions>
     progressOpts.title <- Some title
