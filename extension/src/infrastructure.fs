@@ -13,7 +13,7 @@ type Options = { postfix: string }
 
 type PostHeaders = { ``Content-Type``: string; ``Content-Length``: float }
 
-let uploadText (url: string) (text: string): Promise<string> =
+let postText (url: string) (text: string): Promise<string> =
     P.create (fun resolve eHandler -> 
                    let options = createEmpty<H.RequestOptions>
                    options.method <- Some H.Methods.Post
