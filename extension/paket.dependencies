@@ -1,8 +1,13 @@
 source https://nuget.org/api/v2
 
+clitool dotnet-fable
+
 nuget FSharp.Core
 
 # Keep this version synced with dotnet-fable in .fsproj
-nuget Fable.Core 1.0.4
+nuget Fable.Core
 
 # Add here other Fable libraries like Fable.PowerPack
+nuget Fable.Import.VSCode
+nuget Fable.Import.Node
+nuget Fable.PowerPack
