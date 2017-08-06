@@ -10,7 +10,6 @@ module Domain =
     open System.IO
     open System.Text
     open Fantomas
-    open Microsoft.FSharp.Compiler.SourceCodeServices
 
     let private handle text = 
         let path = Path.GetTempFileName() |> sprintf "%O.fs"
