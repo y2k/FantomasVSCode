@@ -48,6 +48,10 @@ let shell command (args: string list) =
     P.create(fun resolve _ -> let p = ChildProcess.spawn(command, ResizeArray args)
                               p.on("close", resolve) |> ignore)
 
+let replaceText' (editor: TextEditor) select text =
+    editor.edit (fun e -> e.replace(select |> U3.Case3, text)) 
+    |> unbox<Promise<_>>
+
 let replaceText text =
     match window.activeTextEditor with
         | Some te -> 
