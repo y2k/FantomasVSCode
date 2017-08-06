@@ -6,7 +6,8 @@
             "type": "mono",
             "request": "launch",
             "program": "${workspaceRoot}/bin/Debug/FantomasServer.exe",
-            "cwd": "${workspaceRoot}"
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "build"
         },
         {
             "name": "Attach",

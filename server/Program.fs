@@ -8,17 +8,20 @@ open Suave.Successful
 
 module Domain = 
     open System.IO
-    open System.Text
     open Fantomas
 
     let private handle text = 
         let path = Path.GetTempFileName() |> sprintf "%O.fs"
-        try 
-            CodeFormatter.FormatDocument(path, text, FormatConfig.FormatConfig.Default)
+        try
+            try 
+                CodeFormatter.FormatDocument(path, text, FormatConfig.FormatConfig.Default) 
+                |> Some
+            with
+            | e -> printfn "ERROR: %O" e; None
         finally
             File.Delete path
 
-    let private agent = MailboxProcessor<string * AsyncReplyChannel<string>>.Start (fun inbox ->
+    let private agent = MailboxProcessor<string * AsyncReplyChannel<string option>>.Start (fun inbox ->
         let rec messageLoop() = async {
             let! (text, reply) = inbox.Receive()
             handle text |> reply.Reply
@@ -26,17 +29,19 @@ module Domain =
         }
         messageLoop())
 
-    let handle'' (context: HttpContext) = async {
-        let code = context.request.rawForm |> Encoding.UTF8.GetString
+    let handle' code ctx = async {
         let! formated = agent.PostAndAsyncReply(fun replyChannel -> code, replyChannel)
-        return! OK formated context >>= Writers.setMimeType "plain/text"
+        match formated with
+        | Some t -> return! (t |> OK) ctx 
+        | None -> return None
     }
 
 [<EntryPoint>]
 let main _ = 
     let cfg = { defaultConfig with 
-                    logger = Suave.Logging.LiterateConsoleTarget([|"default"|], Suave.Logging.LogLevel.Debug)
                     bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") 8080us  ] }
-    let app = choose [ POST >=> path "/format" >=> Domain.handle'' ]
+    let app = POST 
+              >=> path "/format" 
+              >=> request (fun req -> req.rawForm |> UTF8.toString |> Domain.handle')
     startWebServer cfg app
     0
