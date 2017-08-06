@@ -15,6 +15,7 @@ let private execute (editor: TextEditor) = promise {
         let text = editor.document.getText(select)
         
         let! formated = I.postText "http://212.47.229.214:8080/format" text
+                        |> Promise.map (fun x -> x.TrimEnd '\n')
 
         if editor.document.version = version then 
             do! I.replaceText' editor select formated
