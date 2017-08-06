@@ -12,7 +12,7 @@ let private execute (editor: TextEditor) = promise {
         let select = editor.selection
                      |> fun x -> if x.isEmpty then Selection(0.0, 0.0, editor.document.lineCount, 0.0) else x
 
-        let text = editor.document.getText(select)
+        let text = editor.document.getText select
         
         let! formated = I.postText "http://212.47.229.214:8080/format" text
                         |> Promise.map (fun x -> x.TrimEnd '\n')
