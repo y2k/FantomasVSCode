@@ -22,9 +22,6 @@ module Domain =
     let private agent = MailboxProcessor<string * AsyncReplyChannel<string>>.Start (fun inbox ->
         let rec messageLoop() = async {
             let! (text, reply) = inbox.Receive()
-            
-            printf "Format: |%O| -> |%O|" text (handle text)
-            
             handle text |> reply.Reply
             return! messageLoop()
         }
