@@ -32,7 +32,10 @@ let postText (url: string) (text: string): Promise<string> =
                                                      res.on("end", fun _ -> resolve result) |> ignore
                                                      res.on("error", eHandler) |> ignore)
 
-                   r.write buffer |> ignore)
+                   r.setTimeout 1000.
+                   r.on("error", eHandler) |> ignore
+                   r.write buffer |> ignore
+                   r.``end``())
 
 let createTemp options = 
     let f: (Options -> (obj -> string -> unit) -> unit) = import "file" "tmp"
